@@ -1,0 +1,8 @@
+.container {
+    display : inline-flex;
+}
+
+.item {
+    display:flex;
+    justify-content: space-around;
+}
