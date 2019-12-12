@@ -1,15 +1,16 @@
 //data variables
+const container = document.querySelector(".container")
 let loadedData;
 let loadedLibData;
 let rankedBookList;
 let rankedBookNames = [];
-let libBooks = {};
+let libBooks = [];
 let libBookList;
 let authKey =
   "aec2972736d2fddc06da29cead7a5251c924f514671befb9ce02ee7f51dd9df9";
 let libCode = "111473";
 //DOM
-let button, input;
+let button, input, canvas;
 //loading data
 function preload() {
   //인기대출도서 조회
@@ -29,20 +30,33 @@ function setup() {
   button = select("#submit");
   input = select("#bookNameInput");
   button.mousePressed(findBookInfo);
-
+  canvas = createCanvas(50,50)
+  canvas.parent('container');
+  
 }
 
 function draw() {
-  ellipse(50, 50, 80, 80);
+  // ellipse(50, 50, 80, 80);
   
 }
 
 function findBookInfo(params) {
   console.log(params);
   let bookTitle =input.value();
+  console.log(bookTitle);
   let bookTitleKey = strip(bookTitle);
+  
   bookTitleKey = bookTitleKey.toLowerCase();
-  createP(`${bookTitle} : ${libBooks[bookTitleKey]}`);
+  console.log(bookTitleKey)
+  const isMatching = (element) => element.bookName === bookTitleKey;
+  currentISBN = libBooks[libBooks.findIndex(isMatching)].ISBN
+  if(currentISBN===undefined){
+    // createP(`책의 정보가 없습니다!(제목을 잘 입력했는지 확인해주세요.)`)
+  }else{
+    createP(`${bookTitle} : ${currentISBN}`).parent('list');
+  }
+  // console.log(matching)
+  
   input.value('');
 }
 
@@ -73,19 +87,20 @@ function searchDTLibInfo() {
 
 function gotData(data) {
   libBookList = data.response.docs;
-  console.log(libBookList);
-  for (let i = 0; i < libBookList.length; i++) {
-    const element = libBookList[i];
+  libBookList.forEach(element => {
     let bookName = element.doc.bookname;
     bookName = strip(bookName);
     bookName = bookName.toLowerCase();
-    let loanCount = element.doc.loan_count;
-    let ISBN = element.doc.isbn13;
-    libBooks[bookName][loanCount] = loanCount;
-    libBooks[bookName][ISBN] = ISBN;
-  }
-  // console.log(libBookLoan);
-  console.log(libBookISBN);
+    const loanCount = element.doc.loan_count;
+    const ISBN = element.doc.isbn13;
+    bookObj = {
+      bookName : bookName,
+      loanCount : loanCount,
+      ISBN : ISBN
+    }
+    libBooks.push(bookObj)
+  });
+  console.log(libBooks);
 }
 
 function gotRankingData(data) {
