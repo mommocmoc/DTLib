@@ -1,5 +1,5 @@
 //data variables
-const container = document.querySelector(".container")
+const container = document.querySelector("#container")
 let loadedData;
 let loadedLibData;
 let rankedBookList;
@@ -16,7 +16,7 @@ function preload() {
   //인기대출도서 조회
   //bookRankingLoad();
   //gotLibData();
-  loadedData = loadJSON("./DTLib.json", gotData);
+  loadedData = loadJSON("./DTLib2.json", gotData);
 }
 
 function setup() {
@@ -29,9 +29,12 @@ function setup() {
   // }
   button = select("#submit");
   input = select("#bookNameInput");
+  button2 = select("#submitB");
+  input2 = select("#bookNameInputB");
   button.mousePressed(findBookInfo);
-  canvas = createCanvas(50,50)
-  canvas.parent('container');
+  button2.mousePressed(findRecomendBooks);
+  canvas = createCanvas(900,900)
+  canvas.parent('container2');
   
 }
 
@@ -39,15 +42,27 @@ function draw() {
   // ellipse(50, 50, 80, 80);
   
 }
-
-function findBookInfo(params) {
-  console.log(params);
+function findRecomendBooks(){
+  const usrISBN = input2.value();
+  loadJSON(`http://data4library.kr/api/recommandList?authKey=${authKey}&isbn13=${usrISBN}&format=json`,recommendBokkHandler,"jsonp")
+}
+function recommendBokkHandler(data){
+  const recommendBokkList = data.response.docs;
+  const splicedList = recommendBokkList.slice(0,9)
+  splicedList.forEach((element,index) => {
+    const imgURL = `${element.book.bookImageURL}`
+    
+    loadImage(imgURL, img=>{
+      img.crossOrigin = "";
+      image(img,index*100,0)
+    } )
+    index ++;
+  });
+}
+function findBookInfo() {
   let bookTitle =input.value();
-  console.log(bookTitle);
   let bookTitleKey = strip(bookTitle);
-  
   bookTitleKey = bookTitleKey.toLowerCase();
-  console.log(bookTitleKey)
   const isMatching = (element) => element.bookName === bookTitleKey;
   currentISBN = libBooks[libBooks.findIndex(isMatching)].ISBN
   if(currentISBN===undefined){
@@ -85,14 +100,31 @@ function searchDTLibInfo() {
   );
 }
 
+// function gotData(data) {
+//   libBookList = data.response.docs;
+//   libBookList.forEach(element => {
+//     let bookName = element.doc.bookname;
+//     bookName = strip(bookName);
+//     bookName = bookName.toLowerCase();
+//     const loanCount = element.doc.loan_count;
+//     const ISBN = element.doc.isbn13;
+//     bookObj = {
+//       bookName : bookName,
+//       loanCount : loanCount,
+//       ISBN : ISBN
+//     }
+//     libBooks.push(bookObj)
+//   });
+//   console.log(libBooks);
+// }
 function gotData(data) {
-  libBookList = data.response.docs;
+  libBookList = data
   libBookList.forEach(element => {
-    let bookName = element.doc.bookname;
+    let bookName = element.bookname;
     bookName = strip(bookName);
     bookName = bookName.toLowerCase();
-    const loanCount = element.doc.loan_count;
-    const ISBN = element.doc.isbn13;
+    const loanCount = element.loan_count;
+    const ISBN = element.ISBN;
     bookObj = {
       bookName : bookName,
       loanCount : loanCount,
