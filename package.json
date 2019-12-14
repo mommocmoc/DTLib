@@ -20,7 +20,8 @@
   "homepage": "https://github.com/mommocmoc/DTLib#readme",
   "dependencies": {
     "cors": "^2.8.5",
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "mappa-mundi": "0.0.5"
   },
   "devDependencies": {
     "cors-anywhere": "^0.4.1",

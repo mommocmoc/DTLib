@@ -1,8 +1,14 @@
+body{
+    background: lightgray;
+}
 .container {
     display : inline-flex;
 }
-
+.item{
+    border: none;
+}
+/* 
 .item {
     display:flex;
     justify-content: space-around;
-}
+} */
