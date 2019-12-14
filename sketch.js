@@ -1,4 +1,5 @@
 //data variables
+const hostIp = 'http://192.168.15.12:8080'
 const container = document.querySelector("#container")
 let loadedData;
 let loadedLibData;
@@ -11,6 +12,8 @@ let authKey =
 let libCode = "111473";
 //DOM
 let button, input, canvas;
+let imgURLS = [];
+let imgDatas = [];
 //loading data
 function preload() {
   //인기대출도서 조회
@@ -35,30 +38,75 @@ function setup() {
   button2.mousePressed(findRecomendBooks);
   canvas = createCanvas(900,900)
   canvas.parent('container2');
-  
+  imageSprites = new Group();
 }
 
 function draw() {
-  // ellipse(50, 50, 80, 80);
-  
+  background(255);
+  imageSprites.bounce(imageSprites);
+  for (let i = 0; i < allSprites.length; i++) {
+    const s = allSprites[i];
+    if(s.position.x<0) {
+      s.position.x = 1;
+      s.velocity.x = abs(s.velocity.x);
+    }
+
+    if(s.position.x>width) {
+      s.position.x = width-1;
+      s.velocity.x = -abs(s.velocity.x);
+    }
+
+    if(s.position.y<0) {
+      s.position.y = 1;
+      s.velocity.y = abs(s.velocity.y);
+    }
+
+    if(s.position.y>height) {
+      s.position.y = height-1;
+      s.velocity.y = -abs(s.velocity.y);
+    }
+    drawSprites();
+  }
 }
 function findRecomendBooks(){
   const usrISBN = input2.value();
-  loadJSON(`http://data4library.kr/api/recommandList?authKey=${authKey}&isbn13=${usrISBN}&format=json`,recommendBokkHandler,"jsonp")
+  loadJSON(`http://data4library.kr/api/recommandList?authKey=${authKey}&isbn13=${usrISBN}&format=json`,"jsonp",recommendBokkHandler,errorHandler)
+  input2.value('');
+}
+function errorHandler(params) {
+  console.log(params);
+  
 }
 function recommendBokkHandler(data){
   const recommendBokkList = data.response.docs;
-  const splicedList = recommendBokkList.slice(0,9)
-  splicedList.forEach((element,index) => {
-    const imgURL = `${element.book.bookImageURL}`
-    
-    loadImage(imgURL, img=>{
-      img.crossOrigin = "";
-      image(img,index*100,0)
-    } )
-    index ++;
+  const splicedList = recommendBokkList.slice(0,15);
+  imgURLS = [];
+  // const splicedList = recommendBokkList
+  // console.log(splicedList)
+  splicedList.forEach((element) => {
+    // const imgURL = `https://cors-anywhere.herokuapp.com/${element.book.bookImageURL}`
+    const imgURL = `${hostIp}/${element.book.bookImageURL}`
+    imgURLS.push(imgURL);
+  });
+  console.log(imgURLS);
+  loadImages(imgURLS)
+}
+function loadImages(imgArray) {
+  imgArray.forEach((imgUrl,index) => {
+    loadImage(imgUrl, img=>{
+      console.log(index)
+      // image(img,50*index,50*index)
+      var imageSprite = createSprite(random(0,width),random(0,height));
+      imageSprite.addAnimation('normal',img,img);
+      imageSprite.setCollider('rectangle',2,2,150,200);
+      imageSprite.setSpeed(random(2, 3), random(0, 360));
+      imageSprite.scale = random(0.5,1);
+      imageSprite.mass = imageSprite.scale;
+      imageSprites.add(imageSprite);
+    })
   });
 }
+
 function findBookInfo() {
   let bookTitle =input.value();
   let bookTitleKey = strip(bookTitle);

@@ -1,0 +1,29 @@
+{
+  "name": "dtlib",
+  "version": "1.0.0",
+  "description": "용산 꿈나무 도서관 활동용 웹 어플리케이션",
+  "main": "sketch.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "run": "node server.js",
+    "cors": "node cors.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mommocmoc/DTLib.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mommocmoc/DTLib/issues"
+  },
+  "homepage": "https://github.com/mommocmoc/DTLib#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "cors-anywhere": "^0.4.1",
+    "nodemon": "^2.0.2"
+  }
+}
