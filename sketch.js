@@ -12,9 +12,10 @@ let authKey =
   "aec2972736d2fddc06da29cead7a5251c924f514671befb9ce02ee7f51dd9df9";
 let libCode = "111473";
 //DOM
-let button, input, canvas;
+let button,button2,button3, input, canvas;
 let imgURLS = [];
 let imgDatas = [];
+let presentImgUrl = [];
 // let mapCanvas;
 let myFont;
 //Mappa
@@ -63,7 +64,7 @@ function mapSketch(sketch) {
     sketch.push();
     sketch.textSize(20);
     sketch.textAlign(CENTER);
-    sketch.fill(0)
+    sketch.fill(255,255,0)
     sketch.text('꿈나무도서관',250,210)
     sketch.fill(200, 125, 125);
     sketch.noStroke();
@@ -71,28 +72,21 @@ function mapSketch(sketch) {
     sketch.pop();
   };
 }
-function setup() {
-  // pos = myMap.latLngToPixel(37.5385513, 126.9654268);
 
-  //인기대출도서 순서대로 표시하기
-  // for (let index = 0; index < rankedBookList.length; index++) {
-  //     const element = rankedBookList[index].doc.bookname;
-  //     rankedBookNames.push(element);
-  //     createP(`${index + 1}.${element}`);
-  //     console.log(`${index+1}.${element}`);
-  // }
-  // mapCanvas = createCanvas(500,500);
-  // mapCanvas.parent("mapContainer");
+function setup() {
   button = select("#submit");
   input = select("#bookNameInput");
   button2 = select("#submitB");
   input2 = select("#bookNameInputB");
+  
   button.mousePressed(findBookInfo);
   button2.mousePressed(findRecomendBooks);
+  
   canvas = createCanvas(900, 900);
   canvas.parent("sketchContainer");
   imageSprites = new Group();
   var first_sketch = new p5(mapSketch, "mapContainer");
+  
   var bookNums = createP(
     `${loadedLibInfo.libName}이 가지고 있는 책은 ${loadedLibInfo.BookCount}권입니다!👍`
   );
@@ -137,6 +131,17 @@ function draw() {
     drawSprites();
   }
 }
+function addImgUrl() {
+  const usrTitle = strip(input3.value());
+  console.log(usrTitle);
+  
+  const got = imgDatas.find(element => {
+    console.log(element);
+    return element.bookTitle === usrTitle
+  });
+  presentImgUrl.push(got.imgUrl)
+  presentLoadImages(presentImgUrl); 
+}
 function findRecomendBooks() {
   const usrISBN = input2.value();
   loadJSON(
@@ -154,6 +159,7 @@ function recommendBokkHandler(data) {
   const recommendBokkList = data.response.docs;
   const splicedList = recommendBokkList.slice(0, 15);
   imgURLS = [];
+  imgDatas = [];
   // const splicedList = recommendBokkList
   // console.log(splicedList)
   splicedList.forEach((element,index) => {
@@ -161,19 +167,23 @@ function recommendBokkHandler(data) {
     const imgURL = `${hostIp}/${element.book.bookImageURL}`;
     const bookTitle = strip(element.book.bookname);
     const curIsbn = element.book.isbn13;
-    const titleLi = createElement('a',` ${bookTitle}`)
+    const titleLi = createDiv()
     titleLi.class("list-group-item");
-    titleLi.attribute(
+    const titleLink = createElement('a',` ${bookTitle}`) 
+    titleLink.attribute(
       "href",
       `http://data4library.kr/api/srchDtlList?authKey=${authKey}&isbn13=${curIsbn}&loaninfoYN=Y&displayInfo=gender&format=json`
     );
-    titleLi.attribute('target','_blank')
+    titleLink.attribute('target','_blank')
+    const titleURL = createElement('p',`여기를 복사하세요! ${imgURL}`)
     titleLi.parent("recoList");
+    titleLink.parent(titleLi);
+    titleURL.parent(titleLi);
     imgURLS.push(imgURL);
-    const imgObj = {
-      imgURL: imgURL,
-      bookTitle: bookTitle
-    };
+    let imgObj = {
+      bookTitle : bookTitle,
+      imgUrl : imgURL
+    }
     imgDatas.push(imgObj);
   });
   console.log(imgURLS);
@@ -183,6 +193,8 @@ function recommendBokkHandler(data) {
 }
 
 function loadImages(imgArray) {
+  imageSprites.clear();
+  imageSprites.removeSprites();
   imgArray.forEach((imgUrl, index) => {
     loadImage(imgUrl, img => {
       var imageSprite = createSprite(random(0, width), random(0, height));
@@ -192,6 +204,21 @@ function loadImages(imgArray) {
       imageSprite.scale = random(0.5, 1);
       imageSprite.mass = imageSprite.scale;
       imageSprites.add(imageSprite);
+    });
+  });
+}
+function presentLoadImages(imgArray) {
+  presentImageSprites.clear()
+  presentImageSprites.removeSprites();
+  imgArray.forEach((imgUrl, index) => {
+    loadImage(imgUrl, img => {
+      var imageSprite = createSprite(random(0, width), random(0, height));
+      imageSprite.addAnimation("normal", img, img);
+      imageSprite.setCollider("rectangle", 2, 2, 150, 200);
+      imageSprite.setSpeed(random(2, 3), random(0, 360));
+      imageSprite.scale = random(0.5, 1);
+      imageSprite.mass = imageSprite.scale;
+      presentImageSprites.add(imageSprite);
     });
   });
 }

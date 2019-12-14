@@ -8,38 +8,20 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/p5@0.10.2/lib/p5.js"></script>
-    <script src="node_modules/mappa-mundi/dist/mappa.js"></script>
-
-  </head>
-  <body>
-    9791130605210
-    <div class="tab">
-      <a href="./present.html">발표모드!</a>
+     </head>
+     <body>
+         <div class="tab">
+      <a href="./index.html">데이터 분석 모드!</a>
     </div>
-    <div class="libInfoContainer text-center">
-      <h1 >꿈나무 도서관 정보!</h1>
-      <div id="libInfos"></div>
-      <div id="mapContainer"></div>
+         <div id="presentation" class="text-center mt-3">
+      <h1>나의 2020 독서 계획</h1>
+      <input class="item bg-light" type="text" id="bookNameInputC" />
+      <button class="item bg-info btn" id="submitC">입력!</button>
+      <div id="presentationSketch"></div>
     </div>
-    <div id="container" class="text-center">
-      <h1>ISBN 검색기!</h1>
-      <input class="item bg-light" type="text" id="bookNameInput" />
-      <button class="item bg-primary btn" id="submit">검색!</button>
-      <h2>책 이름 : ISBN 숫자</h2>
-      <ul id="list"></ul>
-    </div>
-    <div id="container2" class="text-center pt-5">
-      <h1>추천도서 검색기!</h1>
-      <input class="item bg-light" type="text" id="bookNameInputB" />
-      <button class="item bg-info btn" id="submitB">검색!</button>
-      <ol id="recoList" class="list-group"></ol>
-    </div>
-    <div id="sketchContainer" class="text-center mt-5"></div>
-    
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
     <script src="./p5.play.js"></script>
-    <script src="./sketch.js"></script>
-  </body>
-</html>
+    <script src="./present.js"></script>
+     </body>
