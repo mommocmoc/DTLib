@@ -1,5 +1,5 @@
 //data variables
-const hostIp = "http://192.168.219.105:8080";
+const hostIp = "https://mommocmoc.github.io/DTLib/";
 const container = document.querySelector("#container"),
   libInfoContainer = document.querySelector(".libInfoConatiner");
 let loadedData;
